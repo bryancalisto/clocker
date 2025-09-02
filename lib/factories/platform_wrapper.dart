@@ -9,6 +9,7 @@ Widget createPlatformWrapper(Widget child) {
     case 'linux':
     case 'windows':
       return MoveWindow(child: child);
+    // TODO: Add support for macOS
     default:
       return Container(child: child);
   }

@@ -1,6 +1,7 @@
 import 'package:clocker/factories/platform_wrapper.dart';
 import 'package:clocker/state.dart';
 import 'package:clocker/views/chronometer_vw.dart';
+import 'package:clocker/views/timer_vw.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -33,9 +34,65 @@ class App extends StatelessWidget {
             splashFactory: InkRipple.splashFactory,
           ),
           themeMode: currentMode,
-          home: createPlatformWrapper(const ChronometerVw()),
+          home: createPlatformWrapper(const MainView()),
         );
       },
+    );
+  }
+}
+
+class MainView extends StatefulWidget {
+  const MainView({Key? key}) : super(key: key);
+
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = GetIt.I<AppState>().themeNotifier.value == ThemeMode.dark;
+    final tabBarColor = isDark ? Colors.white : Colors.black;
+    
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            indicatorColor: tabBarColor,
+            labelColor: tabBarColor,
+            unselectedLabelColor: tabBarColor.withOpacity(0.5),
+            tabs: const [
+              Tab(text: 'Chronometer'),
+              Tab(text: 'Timer'),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                ChronometerVw(),
+                TimerVw(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

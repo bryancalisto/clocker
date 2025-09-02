@@ -36,6 +36,7 @@ Future<void> runCustomPlatformApp(void Function() runApp) async {
       Window.setEffect(effect: WindowEffect.transparent);
 
       break;
+    // TODO: Customize for macOS (window size is not initialized small)
     default:
       runApp();
   }
